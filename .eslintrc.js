@@ -5,14 +5,10 @@ module.exports = {
   parserOptions: {
     tsconfigRootDir: __dirname,
   },
+
   rules: {
-    '@typescript-eslint/no-floating-promises': 0,
-    '@typescript-eslint/no-explicit-any': 0,
-    'no-param-reassign': 0,
-    // These lint checks triggered for https://linear.app/dydx/issue/BAC-2265
-    // Ignore them for now since we violate them across the codebase too often
-    '@typescript-eslint/require-await': 'off',
-    '@typescript-eslint/strict-boolean-expressions': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
+    'newline-per-chained-call': 'off',
+    'no-useless-constructor': 'off',
+    '@typescript-eslint/no-useless-constructor': 'error',
   },
 };

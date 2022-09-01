@@ -1,5 +1,5 @@
 {
-  "name": "@dydxprotocol/starkex-eth",
+  "name": "@flash1-exchange/starkex-eth",
   "version": "0.14.6",
   "description": "Cryptographic functions for use with StarkEx",
   "main": "build/src/index.js",
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dydxprotocol/starkex-eth.git"
+    "url": "git+https://github.com/flash1-dev/starkex-eth.git"
   },
-  "author": "dYdX",
+  "author": "dYdX & Flash1",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/dydxprotocol/starkex-eth/issues"
+    "url": "https://github.com/flash1-dev/starkex-eth/issues"
   },
   "homepage": "https://github.com/dydxprotocol/starkex-eth#readme",
   "dependencies": {
