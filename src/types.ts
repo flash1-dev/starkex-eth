@@ -16,6 +16,7 @@ export const Networks = {
   MAINNET: 1,
   ROPSTEN: 3,
   KOVAN: 42,
+  GOERLI: 5,
 };
 
 export interface TxResult {

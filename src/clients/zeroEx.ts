@@ -7,6 +7,7 @@ import { Networks, ZeroExSwapResponse } from '../types';
 const zeroExUrlMap: { [networkId: number]: string } = {
   [Networks.MAINNET]: 'https://api.0x.org/swap/v1/quote',
   [Networks.ROPSTEN]: 'https://ropsten.api.0x.org/swap/v1/quote',
+  [Networks.GOERLI]: 'https://goerli.api.0x.org/swap/v1/quote',
 };
 
 export async function getZeroExSwapQuote({
