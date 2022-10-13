@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+.env
+.idea
+
+# Hardhat
+coverage
+coverage.json
+typechain
+cache
+artifacts
+
+dist
+docs/
+
+.vscode/
