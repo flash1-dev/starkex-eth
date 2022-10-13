@@ -1,16 +1,16 @@
 {
-  "name": "@imtbl/core-sdk",
-  "version": "0.7.0",
-  "description": "Immutable Core SDK",
+  "name": "@flash1-exchange/starkex-eth",
+  "version": "0.1.7",
+  "description": "Cryptographic functions for use with StarkEx",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/immutable/imx-core-sdk.git"
+    "url": "git+https://github.com/flash1-dev/starkex-eth.git"
   },
   "keywords": [
-    "immutable"
+    "flash1"
   ],
   "files": [
     "dist/index.d.ts",
@@ -19,9 +19,11 @@
     "dist/index.cjs.js",
     "dist/index.cjs.js.map"
   ],
-  "author": "Immutable",
+  "author": "Flash1 & ImmutableX",
   "license": "Apache-2.0",
-  "bugs": "https://github.com/immutable/imx-core-sdk/issues",
+  "bugs": {
+    "url": "https://github.com/flash1-dev/starkex-eth/issues"
+  },
   "engines": {
     "node": ">=14.0.0 <17.0.0"
   },
