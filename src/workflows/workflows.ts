@@ -28,13 +28,19 @@ import {
   ERC20Amount,
   AnyToken,
   ERC20Token,
+  ETHToken,
   EthSigner,
+  ERC20Collateral,
 } from '../types';
 import {
   isRegisteredOnChainWorkflow,
   registerOffchainWorkflow,
 } from './registration';
-import { depositERC20Workflow, depositEthWorkflow } from './deposit';
+import {
+  depositERC20Workflow,
+  depositEthWorkflow,
+  selfMintWorkflow,
+} from './deposit';
 import {
   completeERC20WithdrawalWorkflow,
   completeEthWithdrawalWorkflow,
@@ -115,21 +121,32 @@ export class Workflows {
     return isRegisteredOnChainWorkflow(l2Address, coreContract);
   }
 
-  public async deposit(signer: Signer, deposit: TokenAmount) {
-    switch (deposit.type) {
+  public async deposit(
+    signer: Signer,
+    amount: string,
+    token: ETHToken | ERC20Collateral,
+  ) {
+    switch (token.type) {
       case 'ETH':
-        return this.depositEth(signer, deposit);
+        return this.depositEth(signer, amount, token);
       case 'ERC20':
-        return this.depositERC20(signer, deposit);
+        return this.depositERC20(signer, amount, token);
     }
   }
 
-  private async depositEth(signer: Signer, deposit: ETHAmount) {
+  public async selfMintCollateral(signer: Signer, amount: string) {
+    await this.validateChain(signer);
+
+    return selfMintWorkflow(signer, amount);
+  }
+
+  private async depositEth(signer: Signer, amount: string, token: ETHToken) {
     await this.validateChain(signer);
 
     return depositEthWorkflow(
       signer,
-      deposit,
+      amount,
+      token,
       this.depositsApi,
       this.usersApi,
       this.encodingApi,
@@ -137,12 +154,16 @@ export class Workflows {
     );
   }
 
-  private async depositERC20(signer: Signer, deposit: ERC20Amount) {
+  private async depositERC20(
+    signer: Signer,
+    amount: string,
+    token: ERC20Collateral,
+  ) {
     await this.validateChain(signer);
 
     const starkKey = this.userConfig.starkex.publicKey;
 
-    return depositERC20Workflow(signer, deposit, starkKey, this.config);
+    return depositERC20Workflow(signer, amount, token, starkKey, this.config);
   }
 
   public async prepareWithdrawal(

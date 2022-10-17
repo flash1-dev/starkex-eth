@@ -1,7 +1,9 @@
 import {
   AnyToken,
+  ERC20Amount,
   EthSigner,
   TokenAmount,
+  ERC20Collateral,
   UnsignedOrderRequest,
   WalletConnection,
 } from './types';
@@ -27,8 +29,21 @@ export class Flash1 {
    * @returns a promise that resolves with the resulting transaction
    * @throws {@link index.IMXError}
    */
-  public deposit(ethSigner: EthSigner, deposit: TokenAmount) {
-    return this.workflows.deposit(ethSigner, deposit).catch(err => {
+  public deposit(ethSigner: EthSigner, amount: string, token: ERC20Collateral) {
+    return this.workflows.deposit(ethSigner, amount, token).catch(err => {
+      throw formatError(err);
+    });
+  }
+
+  /**
+   * Mint testnet collateral for free. Used as part of depositing testnet funds
+   * @param ethSigner - the L1 signer
+   * @param deposit - the token type amount in its corresponding unit
+   * @returns a promise that resolves with the resulting transaction
+   * @throws {@link index.IMXError}
+   */
+  public selfMintCollateral(ethSigner: EthSigner, amount: string) {
+    return this.workflows.selfMintCollateral(ethSigner, amount).catch(err => {
       throw formatError(err);
     });
   }

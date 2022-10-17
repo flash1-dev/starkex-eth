@@ -4,7 +4,7 @@ import { DepositsApi, EncodingApi, UsersApi } from '../../api';
 import { parseUnits } from '@ethersproject/units';
 import { Core, Core__factory } from '../../contracts';
 import { getSignableRegistrationOnchain } from '../registration';
-import { ETHAmount } from '../../types';
+import { ETHAmount, ETHToken } from '../../types';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Flash1Configuration } from '../../config';
 
@@ -58,7 +58,8 @@ async function executeDepositEth(
 
 export async function depositEthWorkflow(
   signer: Signer,
-  deposit: ETHAmount,
+  amount: string,
+  token: ETHToken,
   depositsApi: DepositsApi,
   usersApi: UsersApi,
   encodingApi: EncodingApi,
@@ -68,12 +69,12 @@ export async function depositEthWorkflow(
   const data: ETHTokenData = {
     decimals: 18,
   };
-  const amount = parseUnits(deposit.amount, 'wei');
+  const weiAmount = parseUnits(amount, 'wei');
 
   const getSignableDepositRequest = {
     user,
     token: {
-      type: deposit.type,
+      type: token.type,
       data,
     },
     amount: amount.toString(),
@@ -87,7 +88,7 @@ export async function depositEthWorkflow(
     assetType: 'asset',
     encodeAssetRequest: {
       token: {
-        type: deposit.type,
+        type: token.type,
       },
     },
   });
@@ -117,7 +118,7 @@ export async function depositEthWorkflow(
   if (!isRegistered) {
     return executeRegisterAndDepositEth(
       signer,
-      amount,
+      weiAmount,
       assetType,
       starkPublicKey,
       vaultId,
@@ -127,7 +128,7 @@ export async function depositEthWorkflow(
   } else {
     return executeDepositEth(
       signer,
-      amount,
+      weiAmount,
       assetType,
       starkPublicKey,
       vaultId,

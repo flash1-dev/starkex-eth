@@ -28,6 +28,10 @@ declare module "hardhat/types/runtime" {
       name: "Core",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Core__factory>;
+    getContractFactory(
+      name: "SelfSufficient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SelfSufficient__factory>;
 
     getContractAt(
       name: "IERC20",
@@ -49,6 +53,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Core>;
+    getContractAt(
+      name: "SelfSufficient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SelfSufficient>;
 
     // default types
     getContractFactory(

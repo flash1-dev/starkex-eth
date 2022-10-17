@@ -9,10 +9,8 @@ describe('createConfig', () => {
     expect(() =>
       Config.createConfig({
         coreContractAddress: '0x1',
-        registrationContractAddress: '0x2',
         chainID: 3,
         basePath: ' ',
-        collateralAssetID: '',
       }),
     ).toThrowError('basePath can not be empty');
   });
@@ -21,10 +19,8 @@ describe('createConfig', () => {
     expect(() =>
       Config.createConfig({
         coreContractAddress: '0x1',
-        registrationContractAddress: '0x2',
         chainID: 3,
         basePath: '',
-        collateralAssetID: '',
       }),
     ).toThrowError('basePath can not be empty');
   });
@@ -32,7 +28,6 @@ describe('createConfig', () => {
   it('should return config', () => {
     const basePath = 'https://api.ropsten.x.immutable.com';
     const coreContractAddress = '0x1';
-    const registrationContractAddress = '0x2';
     const chainID = 3;
     const customHeaders = {
       'x-custom-headers': 'x values',
@@ -48,18 +43,14 @@ describe('createConfig', () => {
       ethConfiguration: {
         chainID,
         coreContractAddress,
-        registrationContractAddress,
-        collateralAssetID: '',
       },
     };
 
     const actual = Config.createConfig({
       coreContractAddress,
-      registrationContractAddress,
       chainID,
       basePath,
       headers: customHeaders,
-      collateralAssetID: '',
     });
     expect(actual).toEqual(expected);
   });

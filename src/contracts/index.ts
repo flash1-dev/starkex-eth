@@ -14,3 +14,5 @@ export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
 export type { Core } from "./contracts/Core";
 export { Core__factory } from "./factories/contracts/Core__factory";
+export type { SelfSufficient } from "./contracts/SelfSufficient";
+export { SelfSufficient__factory } from "./factories/contracts/SelfSufficient__factory";

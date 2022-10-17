@@ -3,6 +3,7 @@ import {
   ConfigurationParameters,
 } from '../api';
 import { version } from '../../package.json';
+import { CollateralTokens } from '../types';
 
 const defaultHeaders = { 'x-sdk-version': `imx-core-sdk-ts-${version}` };
 
@@ -11,8 +12,6 @@ const defaultHeaders = { 'x-sdk-version': `imx-core-sdk-ts-${version}` };
  */
 export interface EthConfiguration {
   coreContractAddress: string;
-  registrationContractAddress: string;
-  collateralAssetID: string;
   chainID: number;
 }
 
@@ -57,11 +56,9 @@ interface Environment extends EthConfiguration {
 
 const createConfig = ({
   coreContractAddress,
-  registrationContractAddress,
   chainID,
   basePath,
   headers,
-  collateralAssetID,
 }: Environment): Flash1Configuration => {
   if (!basePath.trim()) {
     throw Error('basePath can not be empty');
@@ -77,9 +74,7 @@ const createConfig = ({
     apiConfiguration: new APIConfiguration(apiConfigOptions),
     ethConfiguration: {
       coreContractAddress,
-      registrationContractAddress,
       chainID,
-      collateralAssetID,
     },
   };
 };
@@ -93,9 +88,7 @@ export const Config = {
     return createConfig({
       basePath: 'https://flash1.com',
       chainID: 1,
-      coreContractAddress: '0x5FDCCA53617f4d2b9134B29090C87D01058e27e9',
-      registrationContractAddress: '0x72a06bf2a1CE5e39cBA06c0CAb824960B587d64c',
-      collateralAssetID: ``,
+      coreContractAddress: '0x0',
     });
   },
 
@@ -104,8 +97,6 @@ export const Config = {
       basePath: 'https://test.flash1.com',
       chainID: 5,
       coreContractAddress: '0x2785680c010510c4ef5be451c69c9d6ee748b3de',
-      registrationContractAddress: '',
-      collateralAssetID: `0xa21edc9d9997b1b1956f542fe95922518a9e28ace11b7b2972a1974bf5971f`,
     });
   },
 

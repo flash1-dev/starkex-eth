@@ -1,13 +1,19 @@
 import { Signer } from '@ethersproject/abstract-signer';
 import { TransactionResponse } from '@ethersproject/providers';
-import { DepositsApi, EncodingApi, UsersApi } from '../../api';
+import { UsersApi } from '../../api';
 import { parseUnits } from '@ethersproject/units';
-import { Core, Core__factory, IERC20__factory } from '../../contracts';
+import {
+  Core,
+  Core__factory,
+  IERC20__factory,
+  SelfSufficient__factory,
+} from '../../contracts';
 import { getSignableRegistrationOnchain } from '../registration';
-import { ERC20Amount } from '../../types';
+import { ERC20Collateral } from '../../types';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Flash1Configuration } from '../../config';
 import { getDefaultVaultId } from '../../utils';
+import { COLLATERAL_TOKENS } from '../../constants';
 
 async function executeDepositERC20(
   signer: Signer,
@@ -17,7 +23,6 @@ async function executeDepositERC20(
   vaultId: string,
   contract: Core,
 ): Promise<TransactionResponse> {
-  console.log({ quantizedAmount, assetType, starkPublicKey, vaultId });
   const populatedTransaction = await contract.populateTransaction.depositERC20(
     starkPublicKey,
     assetType,
@@ -60,24 +65,26 @@ async function executeRegisterAndDepositERC20(
 
 export async function depositERC20Workflow(
   signer: Signer,
-  deposit: ERC20Amount,
+  amount: string,
+  token: ERC20Collateral,
   starkKey: string,
   config: Flash1Configuration,
 ): Promise<TransactionResponse> {
-  const amount = parseUnits(deposit.amount, 6); // 0 to always use undecimalized value
+  const parsedAmount = parseUnits(amount, 0);
 
   // Approve whether an amount of token from an account can be spent by a third-party account
-  const tokenContract = IERC20__factory.connect(deposit.tokenAddress, signer);
+  const tokenContract = IERC20__factory.connect(token.tokenAddress, signer);
   const approveTransaction = await tokenContract.populateTransaction.approve(
     config.ethConfiguration.coreContractAddress,
     amount,
   );
+
   await signer.sendTransaction(approveTransaction);
 
-  const assetType = config.ethConfiguration.collateralAssetID;
+  const assetType = token.assetId;
   const starkPublicKey = starkKey;
   const vaultId = getDefaultVaultId(starkKey);
-  const quantizedAmount = BigNumber.from(amount);
+  const parsedAmountBig = BigNumber.from(parsedAmount);
 
   const coreContract = Core__factory.connect(
     config.ethConfiguration.coreContractAddress,
@@ -86,10 +93,27 @@ export async function depositERC20Workflow(
 
   return executeDepositERC20(
     signer,
-    quantizedAmount,
+    parsedAmountBig,
     assetType,
     starkPublicKey,
     vaultId,
     coreContract,
   );
+}
+
+export async function selfMintWorkflow(
+  signer: Signer,
+  amount: string,
+): Promise<TransactionResponse> {
+  const parsedAmount = parseUnits(amount, 0);
+
+  // Approve whether an amount of token from an account can be spent by a third-party account
+  const tokenContract = SelfSufficient__factory.connect(
+    COLLATERAL_TOKENS.SELF_MINT_TESTNET.tokenAddress,
+    signer,
+  );
+  const selfMintTransaction = await tokenContract.populateTransaction.selfMint(
+    parsedAmount,
+  );
+  return signer.sendTransaction(selfMintTransaction);
 }
