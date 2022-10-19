@@ -1,6 +1,5 @@
 import {
   AnyToken,
-  ERC20Amount,
   EthSigner,
   TokenAmount,
   ERC20Collateral,
@@ -9,7 +8,6 @@ import {
 } from './types';
 import { Workflows } from './workflows';
 import { GetSignableCancelOrderRequest, GetSignableTradeRequest } from './api';
-import { formatError } from './utils/formatError';
 import { Flash1Configuration, UserConfiguration } from './config';
 
 /**
@@ -30,9 +28,7 @@ export class Flash1 {
    * @throws {@link index.IMXError}
    */
   public deposit(ethSigner: EthSigner, amount: string, token: ERC20Collateral) {
-    return this.workflows.deposit(ethSigner, amount, token).catch(err => {
-      throw formatError(err);
-    });
+    return this.workflows.deposit(ethSigner, amount, token);
   }
 
   /**
@@ -43,9 +39,7 @@ export class Flash1 {
    * @throws {@link index.IMXError}
    */
   public selfMintCollateral(ethSigner: EthSigner, amount: string) {
-    return this.workflows.selfMintCollateral(ethSigner, amount).catch(err => {
-      throw formatError(err);
-    });
+    return this.workflows.selfMintCollateral(ethSigner, amount);
   }
 
   /**
@@ -55,9 +49,7 @@ export class Flash1 {
    * @throws {@link index.IMXError}
    */
   public registerOffchain(walletConnection: WalletConnection) {
-    return this.workflows.registerOffchain(walletConnection).catch(err => {
-      throw formatError(err);
-    });
+    return this.workflows.registerOffchain(walletConnection);
   }
 
   /**
@@ -67,9 +59,7 @@ export class Flash1 {
    * @throws {@link index.IMXError}
    */
   public isRegisteredOnchain(walletConnection: WalletConnection) {
-    return this.workflows.isRegisteredOnchain(walletConnection).catch(err => {
-      throw formatError(err);
-    });
+    return this.workflows.isRegisteredOnchain(walletConnection);
   }
 
   /**
@@ -83,11 +73,7 @@ export class Flash1 {
     walletConnection: WalletConnection,
     request: TokenAmount,
   ) {
-    return this.workflows
-      .prepareWithdrawal(walletConnection, request)
-      .catch(err => {
-        throw formatError(err);
-      });
+    return this.workflows.prepareWithdrawal(walletConnection, request);
   }
 
   /**
@@ -103,11 +89,7 @@ export class Flash1 {
     starkPublicKey: string,
     token: AnyToken,
   ) {
-    return this.workflows
-      .completeWithdrawal(ethSigner, starkPublicKey, token)
-      .catch(err => {
-        throw formatError(err);
-      });
+    return this.workflows.completeWithdrawal(ethSigner, starkPublicKey, token);
   }
 
   /**
@@ -121,9 +103,7 @@ export class Flash1 {
     walletConnection: WalletConnection,
     request: UnsignedOrderRequest,
   ) {
-    return this.workflows.createOrder(walletConnection, request).catch(err => {
-      throw formatError(err);
-    });
+    return this.workflows.createOrder(walletConnection, request);
   }
 
   /**
@@ -137,9 +117,7 @@ export class Flash1 {
     walletConnection: WalletConnection,
     request: GetSignableCancelOrderRequest,
   ) {
-    return this.workflows.cancelOrder(walletConnection, request).catch(err => {
-      throw formatError(err);
-    });
+    return this.workflows.cancelOrder(walletConnection, request);
   }
 
   /**
@@ -153,8 +131,6 @@ export class Flash1 {
     walletConnection: WalletConnection,
     request: GetSignableTradeRequest,
   ) {
-    return this.workflows.createTrade(walletConnection, request).catch(err => {
-      throw formatError(err);
-    });
+    return this.workflows.createTrade(walletConnection, request);
   }
 }
