@@ -1,7 +1,6 @@
 import {
   AnyToken,
   EthSigner,
-  TokenAmount,
   ERC20Collateral,
   UnsignedOrderRequest,
   WalletConnection,
@@ -60,20 +59,6 @@ export class Flash1 {
    */
   public isRegisteredOnchain(walletConnection: WalletConnection) {
     return this.workflows.isRegisteredOnchain(walletConnection);
-  }
-
-  /**
-   * Create a Withdrawal
-   * @param walletConnection - the pair of L1/L2 signers
-   * @param request - the token type amount in its corresponding unit
-   * @returns a promise that resolves with the created Withdrawal
-   * @throws {@link index.IMXError}
-   */
-  public prepareWithdrawal(
-    walletConnection: WalletConnection,
-    request: TokenAmount,
-  ) {
-    return this.workflows.prepareWithdrawal(walletConnection, request);
   }
 
   /**

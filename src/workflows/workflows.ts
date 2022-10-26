@@ -3,9 +3,7 @@ import {
   DepositsApi,
   EncodingApi,
   OrdersApi,
-  TokensApi,
   UsersApi,
-  WithdrawalsApi,
   GetSignableCancelOrderRequest,
   GetSignableTradeRequest,
   TradesApi,
@@ -23,9 +21,6 @@ import {
 import {
   WalletConnection,
   UnsignedOrderRequest,
-  TokenAmount,
-  ETHAmount,
-  ERC20Amount,
   AnyToken,
   ERC20Token,
   ETHToken,
@@ -44,7 +39,6 @@ import {
 import {
   completeERC20WithdrawalWorkflow,
   completeEthWithdrawalWorkflow,
-  prepareWithdrawalWorkflow,
 } from './withdrawal';
 import { cancelOrderWorkflow, createOrderWorkflow } from './orders';
 import { createTradeWorkflow } from './trades';
@@ -56,10 +50,8 @@ export class Workflows {
   private readonly depositsApi: DepositsApi;
   private readonly encodingApi: EncodingApi;
   private readonly ordersApi: OrdersApi;
-  private readonly tokensApi: TokensApi;
   private readonly tradesApi: TradesApi;
   private readonly usersApi: UsersApi;
-  private readonly withdrawalsApi: WithdrawalsApi;
   private readonly projectsApi: ProjectsApi;
   private readonly collectionsApi: CollectionsApi;
   private readonly metadataApi: MetadataApi;
@@ -80,10 +72,8 @@ export class Workflows {
     this.depositsApi = new DepositsApi(apiConfiguration);
     this.encodingApi = new EncodingApi(apiConfiguration);
     this.ordersApi = new OrdersApi(apiConfiguration);
-    this.tokensApi = new TokensApi(apiConfiguration);
     this.tradesApi = new TradesApi(apiConfiguration);
     this.usersApi = new UsersApi(apiConfiguration);
-    this.withdrawalsApi = new WithdrawalsApi(apiConfiguration);
     this.projectsApi = new ProjectsApi(apiConfiguration);
     this.collectionsApi = new CollectionsApi(apiConfiguration);
     this.metadataApi = new MetadataApi(apiConfiguration);
@@ -166,19 +156,6 @@ export class Workflows {
     return depositERC20Workflow(signer, amount, token, starkKey, this.config);
   }
 
-  public async prepareWithdrawal(
-    walletConnection: WalletConnection,
-    request: TokenAmount,
-  ) {
-    await this.validateChain(walletConnection.ethSigner);
-
-    return prepareWithdrawalWorkflow({
-      ...walletConnection,
-      ...request,
-      withdrawalsApi: this.withdrawalsApi,
-    });
-  }
-
   public completeWithdrawal(
     signer: Signer,
     starkPublicKey: string,
@@ -215,8 +192,6 @@ export class Workflows {
       signer,
       starkPublicKey,
       token,
-      this.encodingApi,
-      this.usersApi,
       this.config,
     );
   }
