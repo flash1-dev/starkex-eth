@@ -79,7 +79,8 @@ export async function depositERC20Workflow(
     amount,
   );
 
-  await signer.sendTransaction(approveTransaction);
+  const approval = await signer.sendTransaction(approveTransaction);
+  await approval.wait(1);
 
   const assetType = token.assetId;
   const starkPublicKey = starkKey;
