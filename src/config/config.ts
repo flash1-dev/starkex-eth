@@ -3,7 +3,6 @@ import {
   ConfigurationParameters,
 } from '../api';
 import { version } from '../../package.json';
-import { CollateralTokens } from '../types';
 
 const defaultHeaders = { 'x-sdk-version': `imx-core-sdk-ts-${version}` };
 

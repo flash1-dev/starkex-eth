@@ -156,17 +156,8 @@ export class Workflows {
     return depositERC20Workflow(signer, amount, token, starkKey, this.config);
   }
 
-  public completeWithdrawal(
-    signer: Signer,
-    starkPublicKey: string,
-    token: AnyToken,
-  ) {
-    switch (token.type) {
-      case 'ETH':
-        return this.completeEthWithdrawal(signer, starkPublicKey);
-      case 'ERC20':
-        return this.completeERC20Withdrawal(signer, starkPublicKey, token);
-    }
+  public completeWithdrawal(signer: Signer, starkOrEthPublicKey: string) {
+    return this.completeERC20Withdrawal(signer, starkOrEthPublicKey);
   }
 
   private async completeEthWithdrawal(signer: Signer, starkPublicKey: string) {
@@ -183,15 +174,13 @@ export class Workflows {
 
   private async completeERC20Withdrawal(
     signer: Signer,
-    starkPublicKey: string,
-    token: ERC20Token,
+    starkOrEthPublicKey: string,
   ) {
     await this.validateChain(signer);
 
     return completeERC20WithdrawalWorkflow(
       signer,
-      starkPublicKey,
-      token,
+      starkOrEthPublicKey,
       this.config,
     );
   }

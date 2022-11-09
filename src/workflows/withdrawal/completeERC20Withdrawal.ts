@@ -2,16 +2,15 @@ import { Signer } from '@ethersproject/abstract-signer';
 import { TransactionResponse } from '@ethersproject/providers';
 import { Flash1Configuration } from '../../config';
 import { Core, Core__factory } from '../../contracts';
-import { ERC20Token } from '../../types';
 
 async function executeWithdrawERC20(
   signer: Signer,
   assetType: string,
-  starkPublicKey: string,
+  starkOrEthPublicKey: string,
   contract: Core,
 ): Promise<TransactionResponse> {
   const populatedTransaction = await contract.populateTransaction.withdraw(
-    starkPublicKey,
+    starkOrEthPublicKey,
     assetType,
   );
 
@@ -20,8 +19,7 @@ async function executeWithdrawERC20(
 
 export async function completeERC20WithdrawalWorkflow(
   signer: Signer,
-  starkPublicKey: string,
-  token: ERC20Token,
+  starkOrEthPublicKey: string,
   config: Flash1Configuration,
 ) {
   const coreContract = Core__factory.connect(
@@ -32,7 +30,7 @@ export async function completeERC20WithdrawalWorkflow(
   return executeWithdrawERC20(
     signer,
     config.ethConfiguration.collateralAssetID,
-    starkPublicKey,
+    starkOrEthPublicKey,
     coreContract,
   );
 }

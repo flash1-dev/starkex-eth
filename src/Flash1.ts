@@ -69,12 +69,8 @@ export class Flash1 {
    * @returns a promise that resolves with the transaction
    * @throws {@link index.IMXError}
    */
-  public completeWithdrawal(
-    ethSigner: EthSigner,
-    starkPublicKey: string,
-    token: AnyToken,
-  ) {
-    return this.workflows.completeWithdrawal(ethSigner, starkPublicKey, token);
+  public completeWithdrawal(ethSigner: EthSigner, starkPublicKey: string) {
+    return this.workflows.completeWithdrawal(ethSigner, starkPublicKey);
   }
 
   /**
