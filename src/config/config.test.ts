@@ -11,6 +11,7 @@ describe('createConfig', () => {
         coreContractAddress: '0x1',
         chainID: 3,
         basePath: ' ',
+        collateralAssetID: '',
       }),
     ).toThrowError('basePath can not be empty');
   });
@@ -21,6 +22,7 @@ describe('createConfig', () => {
         coreContractAddress: '0x1',
         chainID: 3,
         basePath: '',
+        collateralAssetID: '',
       }),
     ).toThrowError('basePath can not be empty');
   });
@@ -43,6 +45,7 @@ describe('createConfig', () => {
       ethConfiguration: {
         chainID,
         coreContractAddress,
+        collateralAssetID: '',
       },
     };
 
@@ -51,6 +54,7 @@ describe('createConfig', () => {
       chainID,
       basePath,
       headers: customHeaders,
+      collateralAssetID: '',
     });
     expect(actual).toEqual(expected);
   });

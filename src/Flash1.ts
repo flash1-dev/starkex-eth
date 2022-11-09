@@ -1,7 +1,6 @@
 import {
   AnyToken,
   EthSigner,
-  TokenAmount,
   ERC20Collateral,
   UnsignedOrderRequest,
   WalletConnection,
@@ -63,20 +62,6 @@ export class Flash1 {
   }
 
   /**
-   * Create a Withdrawal
-   * @param walletConnection - the pair of L1/L2 signers
-   * @param request - the token type amount in its corresponding unit
-   * @returns a promise that resolves with the created Withdrawal
-   * @throws {@link index.IMXError}
-   */
-  public prepareWithdrawal(
-    walletConnection: WalletConnection,
-    request: TokenAmount,
-  ) {
-    return this.workflows.prepareWithdrawal(walletConnection, request);
-  }
-
-  /**
    * Completes a Withdrawal
    * @param ethSigner - the L1 signer
    * @param starkPublicKey - the Signer address
@@ -84,12 +69,8 @@ export class Flash1 {
    * @returns a promise that resolves with the transaction
    * @throws {@link index.IMXError}
    */
-  public completeWithdrawal(
-    ethSigner: EthSigner,
-    starkPublicKey: string,
-    token: AnyToken,
-  ) {
-    return this.workflows.completeWithdrawal(ethSigner, starkPublicKey, token);
+  public completeWithdrawal(ethSigner: EthSigner, starkPublicKey: string) {
+    return this.workflows.completeWithdrawal(ethSigner, starkPublicKey);
   }
 
   /**

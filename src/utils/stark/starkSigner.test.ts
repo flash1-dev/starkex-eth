@@ -1,5 +1,6 @@
 import { Errors } from '../../workflows/errors';
-import { createStarkSigner } from './starkSigner';
+import { stripHexPrefix } from '../crypto/crypto';
+import { createStarkSigner, getDefaultVaultId } from './starkSigner';
 
 describe('StarkSigner', () => {
   it('should return correct address', async () => {
@@ -37,6 +38,19 @@ describe('StarkSigner', () => {
 
     expect(signer.signMessage(encodedMessage)).rejects.toThrow(
       new Error(Errors.StarkCurveInvalidMessageLength),
+    );
+  });
+});
+
+describe('getDefaultVaultId', () => {
+  it('should return correct vaultId for stark key', async () => {
+    const starkPublicKey =
+      '0xc3c9df6ee7df6cdf69042b8b3487ff67dc8a47b0c28021c217b7ad8b189765';
+    const expectedVaultId = '5944723402126197654';
+
+    expect(getDefaultVaultId(starkPublicKey)).toEqual(expectedVaultId);
+    expect(getDefaultVaultId(stripHexPrefix(starkPublicKey))).toEqual(
+      expectedVaultId,
     );
   });
 });
