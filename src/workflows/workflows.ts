@@ -21,15 +21,16 @@ import {
 import {
   WalletConnection,
   UnsignedOrderRequest,
-  AnyToken,
-  ERC20Token,
   ETHToken,
   EthSigner,
   ERC20Collateral,
+  ForcedTradeRequest,
+  ForcedWithdrawalRequest,
+  RegisterUserRequest,
 } from '../types';
 import {
   isRegisteredOnChainWorkflow,
-  registerOffchainWorkflow,
+  registerOnchainWorkflow,
 } from './registration';
 import {
   depositERC20Workflow,
@@ -40,6 +41,7 @@ import {
   completeERC20WithdrawalWorkflow,
   completeEthWithdrawalWorkflow,
 } from './withdrawal';
+import { forcedTrade, forcedWithdrawal } from './forcedActions';
 import { cancelOrderWorkflow, createOrderWorkflow } from './orders';
 import { createTradeWorkflow } from './trades';
 import { generateIMXAuthorisationHeaders } from '../utils';
@@ -89,13 +91,10 @@ export class Workflows {
       );
   }
 
-  public async registerOffchain(walletConnection: WalletConnection) {
-    await this.validateChain(walletConnection.ethSigner);
+  public async registerOnchain(signer: Signer, request: RegisterUserRequest) {
+    await this.validateChain(signer);
 
-    return registerOffchainWorkflow({
-      ...walletConnection,
-      usersApi: this.usersApi,
-    });
+    return registerOnchainWorkflow(signer, request, this.config);
   }
 
   public async isRegisteredOnchain(walletConnection: WalletConnection) {
@@ -183,6 +182,22 @@ export class Workflows {
       starkOrEthPublicKey,
       this.config,
     );
+  }
+
+  public async forcedTradeWorkflow(
+    signer: Signer,
+    request: ForcedTradeRequest,
+  ) {
+    await this.validateChain(signer);
+    return forcedTrade(signer, request, this.config);
+  }
+
+  public async forcedWithdrawalWorkflow(
+    signer: Signer,
+    request: ForcedWithdrawalRequest,
+  ) {
+    await this.validateChain(signer);
+    return forcedWithdrawal(signer, request, this.config);
   }
 
   public async createOrder(

@@ -1,52 +1,34 @@
-import {
-  UsersApi,
-  GetSignableRegistrationResponse,
-  RegisterUserResponse,
-} from '../api';
-import { WalletConnection } from '../types';
-import { signRaw } from '../utils';
+import { Signer } from '@ethersproject/abstract-signer';
+import { TransactionResponse } from '@ethersproject/providers';
+import { UsersApi, GetSignableRegistrationResponse } from '../api';
+import { Core__factory } from '../contracts';
+import { RegisterUserRequest } from '../types';
+import { Flash1Configuration } from '../config';
+
 import { Core } from '../contracts';
-
-type registerOffchainWorkflowParams = WalletConnection & {
-  usersApi: UsersApi;
-};
-
-export async function registerOffchainWorkflow({
-  ethSigner,
-  starkSigner,
-  usersApi,
-}: registerOffchainWorkflowParams): Promise<RegisterUserResponse> {
-  const userAddress = await ethSigner.getAddress();
-  const starkPublicKey = await starkSigner.getAddress();
-
-  const signableResult = await usersApi.getSignableRegistrationOffchain({
-    getSignableRegistrationRequest: {
-      ether_key: userAddress,
-      stark_key: starkPublicKey,
-    },
-  });
-
-  const { signable_message: signableMessage, payload_hash: payloadHash } =
-    signableResult.data;
-
-  const ethSignature = await signRaw(signableMessage, ethSigner);
-
-  const starkSignature = await starkSigner.signMessage(payloadHash);
-
-  const registeredUser = await usersApi.registerUser({
-    registerUserRequest: {
-      eth_signature: ethSignature,
-      ether_key: userAddress,
-      stark_signature: starkSignature,
-      stark_key: starkPublicKey,
-    },
-  });
-
-  return registeredUser.data;
-}
 
 interface IsRegisteredCheckError {
   reason: string;
+}
+
+export async function registerOnchainWorkflow(
+  signer: Signer,
+  request: RegisterUserRequest,
+  config: Flash1Configuration,
+): Promise<TransactionResponse> {
+  const contract = Core__factory.connect(
+    config.ethConfiguration.coreContractAddress,
+    signer,
+  );
+
+  const populatedTransaction =
+    await contract.populateTransaction.registerEthAddress(
+      request.ethKey,
+      request.starkKey,
+      request.signature,
+    );
+
+  return signer.sendTransaction(populatedTransaction);
 }
 
 export async function isRegisteredOnChainWorkflow(

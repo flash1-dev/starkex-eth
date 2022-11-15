@@ -1,12 +1,13 @@
 import {
-  AnyToken,
   EthSigner,
   ERC20Collateral,
-  UnsignedOrderRequest,
   WalletConnection,
+  ForcedTradeRequest,
+  ForcedWithdrawalRequest,
+  RegisterUserRequest,
 } from './types';
 import { Workflows } from './workflows';
-import { GetSignableCancelOrderRequest, GetSignableTradeRequest } from './api';
+import { GetSignableCancelOrderRequest } from './api';
 import { Flash1Configuration, UserConfiguration } from './config';
 
 /**
@@ -42,13 +43,13 @@ export class Flash1 {
   }
 
   /**
-   * Register a User to Immutable X if they are not already
+   * Register a User on L1 for the purpose of performing forced actions
    * @param walletConnection - the pair of L1/L2 signers
    * @returns a promise that resolves with void if successful
    * @throws {@link index.IMXError}
    */
-  public registerOffchain(walletConnection: WalletConnection) {
-    return this.workflows.registerOffchain(walletConnection);
+  public registerOnchain(ethSigner: EthSigner, request: RegisterUserRequest) {
+    return this.workflows.registerOnchain(ethSigner, request);
   }
 
   /**
@@ -74,20 +75,6 @@ export class Flash1 {
   }
 
   /**
-   * Create an Order
-   * @param walletConnection - the pair of L1/L2 signers
-   * @param request - the request object to be provided in the API request
-   * @returns a promise that resolves with the created Order
-   * @throws {@link index.IMXError}
-   */
-  public createOrder(
-    walletConnection: WalletConnection,
-    request: UnsignedOrderRequest,
-  ) {
-    return this.workflows.createOrder(walletConnection, request);
-  }
-
-  /**
    * Cancel an Order
    * @param walletConnection - the pair of L1/L2 signers
    * @param request - the request object to be provided in the API request
@@ -102,16 +89,27 @@ export class Flash1 {
   }
 
   /**
-   * Create a Trade
+   * Create a Forced Trade Request
    * @param walletConnection - the pair of L1/L2 signers
-   * @param request - the request object to be provided in the API request
+   * @param request - the request object to be provided in the request
    * @returns a promise that resolves with the created Trade
    * @throws {@link index.IMXError}
    */
-  public createTrade(
-    walletConnection: WalletConnection,
-    request: GetSignableTradeRequest,
+  public forcedTrade(ethSigner: EthSigner, request: ForcedTradeRequest) {
+    return this.workflows.forcedTradeWorkflow(ethSigner, request);
+  }
+
+  /**
+   * Create a Forced Withdrawal Request
+   * @param walletConnection - the pair of L1/L2 signers
+   * @param request - the request object to be provided in the request
+   * @returns a promise that resolves with the created Trade
+   * @throws {@link index.IMXError}
+   */
+  public forcedWithdrawal(
+    ethSigner: EthSigner,
+    request: ForcedWithdrawalRequest,
   ) {
-    return this.workflows.createTrade(walletConnection, request);
+    return this.workflows.forcedWithdrawalWorkflow(ethSigner, request);
   }
 }

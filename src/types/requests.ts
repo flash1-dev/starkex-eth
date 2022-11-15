@@ -41,3 +41,38 @@ export type UnsignedTransferRequest = TokenAmount & {
  * Parameter required to Mint tokens
  */
 export type UnsignedMintRequest = Omit<MintRequest, 'auth_signature'>;
+
+/**
+ * Parameter required to create a forced trade
+ */
+export interface ForcedTradeRequest {
+  starkKeyA: string;
+  starkKeyB: string;
+  vaultIdA: string;
+  vaultIdB: string;
+  collateralAssetId: string;
+  syntheticAssetId: string;
+  amountCollateral: string;
+  amountSynthetic: string;
+  aIsBuyingSynthetic: boolean;
+  submissionExpirationTime: string;
+  nonce: string;
+  signature: string;
+  premiumCost: boolean;
+}
+
+/**
+ * Parameter required to create a forced withdrawal
+ */
+export interface ForcedWithdrawalRequest {
+  starkKey: string;
+  vaultId: string;
+  quantizedAmount: string;
+  premiumCost: boolean;
+}
+
+export interface RegisterUserRequest {
+  ethKey: string;
+  starkKey: string;
+  signature: string;
+}
