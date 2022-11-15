@@ -28,7 +28,7 @@ export class StandardStarkSigner implements StarkSigner {
   private serialize(sig: ec.Signature): string {
     return encUtils.addHexPrefix(
       encUtils.padLeft(sig.r.toString('hex'), 64) +
-      encUtils.padLeft(sig.s.toString('hex'), 64),
+        encUtils.padLeft(sig.s.toString('hex'), 64),
     );
   }
 
@@ -68,7 +68,9 @@ export function createStarkSigner(starkPrivateKey: string): StarkSigner {
 export function getDefaultVaultId(starkPublicKey: string) {
   const hash = cryptoJS.algo.SHA256.create();
   const vaultIdHex = hash
-    .update(cryptoJS.enc.Hex.parse(stripHexPrefix(starkPublicKey)))
+    .update(
+      cryptoJS.enc.Hex.parse(stripHexPrefix(starkPublicKey.toLowerCase())),
+    )
     .finalize()
     .toString(cryptoJS.enc.Hex);
   return hexToBn(vaultIdHex).mod(MAX_VAULT_ID).toString();
